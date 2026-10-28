@@ -2,6 +2,5 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// La página de inicio no tiene contenido propio: manda directo al listado.
+Route::redirect('/', '/aspirantes');
