@@ -55,4 +55,21 @@ class AspiranteController extends Controller
 
         return view('aspirantes.show', ['aspirante' => $aspirante]);
     }
+
+    public function edit(Aspirante $aspirante): View
+    {
+        return view('aspirantes.edit', [
+            'aspirante' => $aspirante,
+            'estadosCiviles' => EstadoCivil::cases(),
+        ]);
+    }
+
+    public function update(StoreAspiranteRequest $request, Aspirante $aspirante): RedirectResponse
+    {
+        $aspirante->update($request->validated());
+
+        return redirect()
+            ->route('aspirantes.show', $aspirante)
+            ->with('exito', 'Datos del aspirante actualizados correctamente.');
+    }
 }

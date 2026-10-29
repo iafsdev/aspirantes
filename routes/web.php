@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/aspirantes');
 
-Route::resource('aspirantes', AspiranteController::class)->only(['index', 'create', 'store', 'show']);
+Route::resource('aspirantes', AspiranteController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update']);
 
 Route::singleton('aspirantes.evaluacion', EvaluacionController::class)
     ->creatable()

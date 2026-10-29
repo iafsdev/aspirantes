@@ -11,7 +11,10 @@
         <div class="col-lg-5">
             <div class="card shadow-sm h-100">
                 <div class="card-body">
-                    <h1 class="h4 mb-4">{{ $aspirante->nombre_completo }}</h1>
+                    <div class="d-flex justify-content-between align-items-start gap-2 mb-4">
+                        <h1 class="h4 mb-0">{{ $aspirante->nombre_completo }}</h1>
+                        <a href="{{ route('aspirantes.edit', $aspirante) }}" class="btn btn-sm btn-outline-primary text-nowrap">Editar datos</a>
+                    </div>
 
                     <dl class="mb-0">
                         <dt>Puesto al que aplica</dt>

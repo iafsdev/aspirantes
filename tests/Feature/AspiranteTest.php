@@ -166,6 +166,55 @@ class AspiranteTest extends TestCase
             ->assertSee(route('aspirantes.evaluacion.create', $aspirante));
     }
 
+    public function test_el_detalle_ofrece_editar_los_datos(): void
+    {
+        $aspirante = Aspirante::factory()->create();
+
+        $this->get(route('aspirantes.show', $aspirante))
+            ->assertSee(route('aspirantes.edit', $aspirante));
+    }
+
+    public function test_el_formulario_de_edicion_trae_los_datos_actuales(): void
+    {
+        $aspirante = Aspirante::factory()->create([
+            'nombre_completo' => 'Fernando Gil',
+            'estado_civil' => EstadoCivil::Viudo,
+            'fecha_nacimiento' => '1988-07-21',
+        ]);
+
+        $this->get(route('aspirantes.edit', $aspirante))
+            ->assertOk()
+            ->assertSee('value="Fernando Gil"', false)
+            ->assertSee('value="1988-07-21"', false)
+            ->assertSee('value="viudo" selected', false);
+    }
+
+    public function test_actualiza_los_datos_de_un_aspirante(): void
+    {
+        $aspirante = Aspirante::factory()->create(['nombre_completo' => 'Nombre Mal Escrito']);
+
+        // Actuar
+        $this->put(route('aspirantes.update', $aspirante), $this->datosValidos(['nombre_completo' => 'Nombre Corregido']))
+            ->assertRedirect(route('aspirantes.show', $aspirante))
+            ->assertSessionHas('exito');
+
+        // Verificar
+        $this->assertSame('Nombre Corregido', $aspirante->fresh()->nombre_completo);
+    }
+
+    public function test_rechaza_una_edicion_invalida_sin_modificar_los_datos(): void
+    {
+        $aspirante = Aspirante::factory()->create(['nombre_completo' => 'Original']);
+
+        $this->put(route('aspirantes.update', $aspirante), $this->datosValidos([
+            'nombre_completo' => '',
+            'estado_civil' => 'kasado',
+        ]))->assertSessionHasErrors(['nombre_completo', 'estado_civil']);
+
+        // El registro no cambió
+        $this->assertSame('Original', $aspirante->fresh()->nombre_completo);
+    }
+
     public function test_un_aspirante_inexistente_responde_404_en_espanol(): void
     {
         $this->get('/aspirantes/999')

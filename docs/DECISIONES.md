@@ -27,6 +27,7 @@ El enunciado no define estos puntos; se tomaron estas decisiones:
 8. **Promedio** simple de las tres calificaciones, redondeado a dos decimales. Es un dato informativo calculado en el modelo; no se guarda en la base.
 9. **Listado** paginado de 10 en 10, con búsqueda por nombre o puesto (coincidencia parcial, sin distinguir mayúsculas).
 10. **Comentarios** opcionales, hasta 5,000 caracteres.
+11. **Edición de los datos del aspirante** desde su detalle, para corregir errores de captura. Usa el mismo formulario y las mismas reglas que el alta.
 
 ## 3. Modelo de datos
 
@@ -65,7 +66,7 @@ erDiagram
 ## 4. Organización del código
 
 - **Controladores delgados**: solo coordinan; la validación vive en Form Requests y el acceso a datos en Eloquent.
-- **Form Requests** (`StoreAspiranteRequest`, `StoreEvaluacionRequest`) con mensajes y nombres de campo en español. Se usa `bail` en las calificaciones para mostrar un solo error por campo. La evaluación usa el mismo Request al crear y al editar, porque las reglas son idénticas.
+- **Form Requests** (`StoreAspiranteRequest`, `StoreEvaluacionRequest`) con mensajes y nombres de campo en español. Se usa `bail` en las calificaciones para mostrar un solo error por campo. El aspirante y la evaluación usan el mismo Request al crear y al editar, porque las reglas son idénticas; los formularios también se comparten (`_form.blade.php`).
 - **Route model binding**: `{aspirante}` en la URL se convierte en el modelo; si no existe, responde 404.
 - **Ruta singleton** para la evaluación (`/aspirantes/{aspirante}/evaluacion`): refleja que cada aspirante tiene una sola, sin exponer el id de la evaluación.
 - **Carga anticipada** con `with('evaluacion')` en el listado para evitar el problema N+1 (siempre 2 consultas por página en lugar de 1 + N).

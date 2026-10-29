@@ -2,7 +2,7 @@
 
 Aplicación web para gestionar un proceso de selección de personal. Permite:
 
-- **Registrar aspirantes**: nombre completo, puesto al que aplica, estado civil, fecha de nacimiento y carrera o formación académica.
+- **Registrar aspirantes**: nombre completo, puesto al que aplica, estado civil, fecha de nacimiento y carrera o formación académica. Sus datos se pueden corregir después desde el detalle.
 - **Evaluar a cada aspirante** en conocimientos técnicos, referencias y habilidades blandas (de 0 a 10, con hasta dos decimales), junto con comentarios generales. La evaluación se puede editar después.
 - **Consultar** el listado de aspirantes (paginado, con búsqueda por nombre o puesto y su promedio) y el detalle de cada uno con su evaluación.
 
@@ -77,7 +77,7 @@ cp .env.example .env
 php artisan test
 ```
 
-Cubren: alta válida e inválida, evaluación válida y fuera de rango (`-1`, `10.5`, texto, más de dos decimales), edición, regla de una evaluación por aspirante, listado con búsqueda y paginación, detalle, página 404 y escape de HTML.
+Cubren: alta y edición válidas e inválidas, evaluación válida y fuera de rango (`-1`, `10.5`, texto, más de dos decimales), edición, regla de una evaluación por aspirante, listado con búsqueda y paginación, detalle, página 404 y escape de HTML.
 
 ## Estructura del proyecto
 
@@ -86,10 +86,10 @@ app/
 ├── Enums/EstadoCivil.php              Catálogo cerrado de estados civiles
 ├── Http/
 │   ├── Controllers/
-│   │   ├── AspiranteController.php    Listado, alta y detalle
+│   │   ├── AspiranteController.php    Listado, alta, detalle y edición
 │   │   └── EvaluacionController.php   Crear y editar la evaluación
 │   └── Requests/
-│       ├── StoreAspiranteRequest.php  Validación del alta
+│       ├── StoreAspiranteRequest.php  Validación del alta y la edición
 │       └── StoreEvaluacionRequest.php Validación de calificaciones
 └── Models/
     ├── Aspirante.php                  Relación hasOne con Evaluacion
@@ -100,7 +100,7 @@ database/
 └── seeders/DatosEjemploSeeder.php     Datos de ejemplo (ejecución manual)
 resources/views/
 ├── layouts/app.blade.php              Plantilla base (Bootstrap)
-├── aspirantes/                        index, create, show
+├── aspirantes/                        index, create, edit, show y formulario compartido
 ├── evaluaciones/                      create, edit y formulario compartido
 ├── partials/calendario.blade.php      Selector de fecha dd/mm/aaaa
 └── errors/                            Páginas 404, 419 y 500 en español
