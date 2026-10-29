@@ -14,6 +14,7 @@
                 @include('evaluaciones._form')
 
                 <button type="submit" class="btn btn-primary">Actualizar evaluación</button>
+                <a href="{{ route('aspirantes.show', $aspirante) }}" class="btn btn-link">Cancelar</a>
             </form>
         </div>
     </div>

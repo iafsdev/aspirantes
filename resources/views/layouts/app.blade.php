@@ -14,7 +14,7 @@
 <body class="bg-light">
     <nav class="navbar navbar-dark bg-primary mb-4">
         <div class="container">
-            <span class="navbar-brand">{{ config('app.name') }}</span>
+            <a class="navbar-brand" href="{{ route('aspirantes.index') }}">{{ config('app.name') }}</a>
         </div>
     </nav>
 

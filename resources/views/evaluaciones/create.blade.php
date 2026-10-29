@@ -13,6 +13,7 @@
                 @include('evaluaciones._form', ['evaluacion' => null])
 
                 <button type="submit" class="btn btn-primary">Guardar evaluación</button>
+                <a href="{{ route('aspirantes.show', $aspirante) }}" class="btn btn-link">Cancelar</a>
             </form>
         </div>
     </div>
