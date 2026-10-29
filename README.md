@@ -1,58 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Selección de Aspirantes
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicación web para gestionar un proceso de selección de personal. Permite:
 
-## About Laravel
+- **Registrar aspirantes**: nombre completo, puesto al que aplica, estado civil, fecha de nacimiento y carrera o formación académica.
+- **Evaluar a cada aspirante** en conocimientos técnicos, referencias y habilidades blandas (de 0 a 10, con hasta dos decimales), junto con comentarios generales. La evaluación se puede editar después.
+- **Consultar** el listado de aspirantes (paginado, con búsqueda por nombre o puesto y su promedio) y el detalle de cada uno con su evaluación.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Desarrollada con Laravel 13, PHP 8.5 y MySQL 8.4. Las decisiones técnicas están en [`docs/DECISIONES.md`](docs/DECISIONES.md).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Docker](https://docs.docker.com/get-docker/) con **Docker Compose v2** (incluido en Docker Desktop).
+- El puerto **8080** libre.
 
-## Learning Laravel
+No se necesita PHP, Composer ni MySQL instalados en la máquina.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Arranque
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Desde la raíz del proyecto:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+docker compose up --build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Al iniciar, el contenedor genera la clave de la aplicación, crea las tablas en MySQL y arranca el servidor. Cuando aparezca `resuming normal operations`, abre:
 
-## Contributing
+**http://localhost:8080**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+La primera ejecución tarda unos minutos porque descarga las imágenes. Para correrlo en segundo plano, agrega `-d`.
 
-## Code of Conduct
+### Credenciales de la base de datos (opcional)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Por defecto funciona sin configurar nada. Para usar credenciales propias, define estas variables en el entorno (o en un archivo `.env` en la raíz) antes de arrancar:
 
-## Security Vulnerabilities
+| Variable | Valor por defecto |
+|---|---|
+| `MYSQL_DATABASE` | `aspirantes` |
+| `MYSQL_USER` | `aspirantes` |
+| `MYSQL_PASSWORD` | `aspirantes` |
+| `MYSQL_ROOT_PASSWORD` | `root` |
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Detener, reiniciar y datos de ejemplo
 
-## License
+```bash
+# Detener (los datos se conservan en el volumen de MySQL)
+docker compose down
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Reiniciar desde cero (borra la base de datos)
+docker compose down -v && docker compose up --build
+
+# Cargar datos de ejemplo (con la aplicación en ejecución)
+docker compose exec app php artisan db:seed --class=DatosEjemploSeeder --force
+
+# Ver los registros de la aplicación
+docker compose logs -f app
+```
+
+El seeder crea cuatro aspirantes, tres de ellos evaluados. No se ejecuta en el arranque; solo cuando se pide con el comando anterior.
+
+## Pruebas
+
+Las pruebas de feature usan SQLite en memoria, por lo que no requieren MySQL ni la aplicación en ejecución.
+
+**Con Docker** (sin instalar nada más):
+
+```bash
+docker run --rm -v "$PWD":/app -w /app composer:2 sh -c \
+  "composer install --ignore-platform-req=ext-bcmath && cp -n .env.example .env && php artisan test"
+```
+
+**Con PHP 8.3+ y Composer locales**:
+
+```bash
+composer install
+cp .env.example .env
+php artisan test
+```
+
+Cubren: alta válida e inválida, evaluación válida y fuera de rango (`-1`, `10.5`, texto, más de dos decimales), edición, regla de una evaluación por aspirante, listado con búsqueda y paginación, detalle, página 404 y escape de HTML.
+
+## Estructura del proyecto
+
+```
+app/
+├── Enums/EstadoCivil.php              Catálogo cerrado de estados civiles
+├── Http/
+│   ├── Controllers/
+│   │   ├── AspiranteController.php    Listado, alta y detalle
+│   │   └── EvaluacionController.php   Crear y editar la evaluación
+│   └── Requests/
+│       ├── StoreAspiranteRequest.php  Validación del alta
+│       └── StoreEvaluacionRequest.php Validación de calificaciones
+└── Models/
+    ├── Aspirante.php                  Relación hasOne con Evaluacion
+    └── Evaluacion.php                 Relación belongsTo y promedio calculado
+database/
+├── migrations/                        Tablas aspirantes y evaluaciones
+├── factories/                         Datos falsos para las pruebas
+└── seeders/DatosEjemploSeeder.php     Datos de ejemplo (ejecución manual)
+resources/views/
+├── layouts/app.blade.php              Plantilla base (Bootstrap)
+├── aspirantes/                        index, create, show
+├── evaluaciones/                      create, edit y formulario compartido
+├── partials/calendario.blade.php      Selector de fecha dd/mm/aaaa
+└── errors/                            Páginas 404, 419 y 500 en español
+routes/web.php                         Rutas de la aplicación
+lang/es/                               Mensajes de validación en español
+public/css/app.css                     Color institucional sobre Bootstrap
+tests/Feature/                         Pruebas de feature
+docker/
+├── apache.conf                        DocumentRoot en public/
+└── entrypoint.sh                      Clave, migraciones y arranque
+Dockerfile                             Imagen multietapa (Composer → PHP 8.5 + Apache)
+compose.yaml                           Servicios app y db (MySQL 8.4)
+docs/DECISIONES.md                     Tecnologías, supuestos y decisiones técnicas
+```
