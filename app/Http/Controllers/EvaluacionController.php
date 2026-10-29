@@ -32,7 +32,7 @@ class EvaluacionController extends Controller
         $aspirante->evaluacion()->create($request->validated());
 
         return redirect()
-            ->route('aspirantes.evaluacion.edit', $aspirante)
+            ->route('aspirantes.show', $aspirante)
             ->with('exito', 'Evaluación registrada correctamente.');
     }
 
@@ -53,7 +53,7 @@ class EvaluacionController extends Controller
         $aspirante->evaluacion()->firstOrFail()->update($request->validated());
 
         return redirect()
-            ->route('aspirantes.evaluacion.edit', $aspirante)
+            ->route('aspirantes.show', $aspirante)
             ->with('exito', 'Evaluación actualizada correctamente.');
     }
 }

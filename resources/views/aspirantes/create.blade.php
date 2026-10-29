@@ -70,6 +70,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary">Guardar aspirante</button>
+                <a href="{{ route('aspirantes.index') }}" class="btn btn-link">Cancelar</a>
             </form>
         </div>
     </div>
