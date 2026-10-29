@@ -1,0 +1,45 @@
+/* Color institucional (vino) sobre el "primary" de Bootstrap */
+:root {
+    --bs-primary: #7a1f3d;
+    --bs-primary-rgb: 122, 31, 61;
+    --bs-link-color: #7a1f3d;
+    --bs-link-color-rgb: 122, 31, 61;
+    --bs-link-hover-color: #5c172e;
+    --bs-link-hover-color-rgb: 92, 23, 46;
+}
+
+.btn-primary {
+    --bs-btn-bg: #7a1f3d;
+    --bs-btn-border-color: #7a1f3d;
+    --bs-btn-hover-bg: #5c172e;
+    --bs-btn-hover-border-color: #5c172e;
+    --bs-btn-active-bg: #4a1225;
+    --bs-btn-active-border-color: #4a1225;
+    --bs-btn-disabled-bg: #7a1f3d;
+    --bs-btn-disabled-border-color: #7a1f3d;
+    --bs-btn-focus-shadow-rgb: 122, 31, 61;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #7a1f3d;
+    --bs-btn-border-color: #7a1f3d;
+    --bs-btn-hover-bg: #7a1f3d;
+    --bs-btn-hover-border-color: #7a1f3d;
+    --bs-btn-active-bg: #5c172e;
+    --bs-btn-active-border-color: #5c172e;
+    --bs-btn-focus-shadow-rgb: 122, 31, 61;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #bd8f9e;
+    box-shadow: 0 0 0 0.25rem rgba(122, 31, 61, 0.25);
+}
+
+.pagination {
+    --bs-pagination-color: #7a1f3d;
+    --bs-pagination-hover-color: #5c172e;
+    --bs-pagination-active-bg: #7a1f3d;
+    --bs-pagination-active-border-color: #7a1f3d;
+    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(122, 31, 61, 0.25);
+}
