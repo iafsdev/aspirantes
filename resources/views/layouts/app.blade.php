@@ -23,6 +23,10 @@
             <div class="alert alert-success">{{ session('exito') }}</div>
         @endif
 
+        @if (session('aviso'))
+            <div class="alert alert-warning">{{ session('aviso') }}</div>
+        @endif
+
         @yield('contenido')
     </main>
 
