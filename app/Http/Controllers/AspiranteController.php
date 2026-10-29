@@ -23,6 +23,7 @@ class AspiranteController extends Controller
                 });
             })
             ->latest()
+            ->latest('id')
             ->paginate(10)
             ->withQueryString();
 
